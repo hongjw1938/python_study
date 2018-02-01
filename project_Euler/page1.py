@@ -26,7 +26,7 @@ def isPrime(num):
     retval = False
     if num<2:
         retval = False
-    elif num==2 or num==3 or num==5:
+    elif num==2 or num==3 or num==5 or num==7 or num==11 or num==13 or num==17 or num==19 or num==23:
         retval = True
     elif num%2 == 0 or num%3 == 0:
         retval = False
@@ -128,4 +128,57 @@ def getBigPal(digP):
     return palNum[-1]
 
 
-print(getBigPal(3))
+#print(getBigPal(3))
+
+#Question 5
+#2520 is the smallest number that can be divided by each of the numbers from 1 to 10 without any remainder.
+
+#What is the smallest positive number that is evenly divisible by all of the numbers from 1 to 20?
+
+
+def getNum(ran):
+    
+    retNum = 1
+    temp = ran
+    #To go out with better performance, make it even number
+    if ran % 2 == 0:
+        pass
+    else:
+        ran += 1
+    
+    #First of all, multiply every prime number
+    #To implement performance, multiply 2 before try for~loop
+    retNum *= 2
+    
+    for i in range(3,ran,2):
+        if isPrime(i):
+            retNum *= i
+        else:
+            continue
+    
+    #Secondly, make it back to original number to go further
+    #And save the number into temporary variable
+    if temp%2 !=0:
+        ran -=1
+    plusNum = retNum
+    
+    
+    #Lastly, check if the number is the targeted one.
+    while True:
+        
+        for j in range(2,ran+1):
+            if retNum % j == 0:
+                if j==ran:
+                    return retNum
+                continue
+            
+            else:
+                break
+        retNum += plusNum
+        
+
+#print(getNum(30))
+
+
+
+
