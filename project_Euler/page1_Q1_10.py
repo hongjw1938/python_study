@@ -392,4 +392,57 @@ def findTriplet(QNum):
                     
             
         
-print(findTriplet(1000))
+#print(findTriplet(1000))
+
+
+
+
+#########################################Q10
+
+#The sum of the primes below 10 is 2 + 3 + 5 + 7 = 17.
+
+#Find the sum of all the primes below two million.
+
+def checkPrime(num):
+    sqrtNum = num ** 0.5
+    retVal = False
+    divider = 5
+    
+    if num == 2 or num == 3 or num == 5 or num==7 or num == 11 or num == 13 or num == 17 or num == 19 or num == 23:
+        retVal = True
+    elif num % 2 == 0 or num % 3 == 0 or num % 5 == 0 or num % 7 ==0 or num % 11 == 0 or num % 13 ==0 or num % 17 ==0 or num % 19 ==0 or num % 23 ==0:
+        retVal = False
+    else:
+        while divider <= sqrtNum:
+            if num % divider == 0 or num % (divider+2) == 0:
+                retVal = False
+                break
+            else:
+                retVal = True
+            divider += 6
+    return retVal
+    
+    
+
+sumNum = 2+3
+pNum = 5
+while pNum < 2000000:
+    if checkPrime(pNum):
+        sumNum += pNum
+       
+        if checkPrime(pNum + 2):
+            
+            sumNum += pNum+2
+           
+        
+    elif checkPrime(pNum + 2):
+        
+        sumNum += pNum+2
+        
+    else:
+        pass
+    pNum += 6
+    if pNum > 2000000:
+        print(sumNum)
+        break
+
