@@ -126,7 +126,7 @@ def b_search2(mylist, f_val):
     
     f_idx = -1
     
-    while end > start:
+    while end >= start:
         f_idx = (start + end) // 2
         if mylist[f_idx] > f_val:
             end = f_idx - 1
