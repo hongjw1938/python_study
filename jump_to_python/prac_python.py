@@ -17,18 +17,26 @@ print('selection sorted list : ' , selectionTest)
 ##Insert sort
 
 def i_sort(list1):
-    changeVal = 0;
-    for i in range(0,len(list1)-1):
-        for j in range(i+1, len(list1)):
-            if list1[j] < list1[i]:
-                changeVal = list1[j]
-                list1.remove(changeVal)
-                list1.insert(i,changeVal)
-            #print(insertionTest)
+    result = [list1[0]]
+    
+    for i in range(1, len(list1)-1):
+        j = i_sort_find_idx(result, list1[i])
+        result.insert(j, list1[i])
+    return result
+        
+def i_sort_find_idx(myList, value):
+    i = 0
+    while(i < len(myList)):
+        if myList[i] <= value:
+            i += 1
+        else:
+            break
+    return i
+            
 
 insertionTest = [2,65,7,5,1,7,845,0,90,86]
-i_sort(insertionTest)
-print('insertion sort : ', insertionTest)
+
+print('insertion sort : ', i_sort(insertionTest))
 
 
 
