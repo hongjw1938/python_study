@@ -1,2 +1,49 @@
-# python_study
-Studying python
+### Python 이란?
+- <b>파이썬</b>
+    - 1991년 귀도 반 로썸이 발표
+    - 특징
+        - 가독성 높음(간결, 코드 block을 들여쓰기로 구분)
+        - 풍부한 Library
+        - 접착성 : 간단하게 library 추가, C로 구현된 부분 사용 가능
+        - 무료
+        - 유니코드 : 문자열 모두 유니코드
+        - 동적타이핑 : 런타임 시에 타입 체크 하는 동적타이핑 지원, 메모리 관리 자동
+- <b>파이썬의 종류</b>
+    - Cpython
+        - C로 구성된 Python
+    - Jython
+        - 자바로 구성된 Python
+        - 자바 가상 머신에서 구동 가능
+        - 자바 library를 지원함
+    - IronPython
+        - .NET용으로 C#으로 구현된 Python
+    - Pypy
+        - Python 으로 구현된 Python
+- <b>파이썬으로 진행된 Project</b>
+    - ![Alt Text](./image/PythonProject.png)
+- <b>파이썬의 Version</b>
+    - 2.x style
+        - print
+            - ex) print "welcome to", ---
+        - int/int가 int의 결과로 반영되었음
+        - String, Unicode로 구분
+    - 3.x style
+        - 2 version과의 호환성이 전혀 없음
+        - print가 함수형태로 변경
+            - ex) print("welcome")
+        - long 자료형이 없어지고 int형으로 통일
+        - int/int의 결과가 float으로 처리됨.
+        - String / bytes로 구분(Unicode를 따로 지정하지 않고 일반 String이 기존 Unicode)
+- <b>파이썬의 문법</b>
+    - 들여쓰기(indentation)
+        - 가독성을 높일 수 있음. 그러나 오류가 발생하지 않도록 주의
+        - 예약어 아래에 같은 구문 시, 예약어 뒤에 (:) 사용하여 구분
+            - <pre><code>for i in Python: 
+                &#32; &#32;print(i)
+              </code></pre>
+    - 주석(#)
+        - ```-*- coding: utf-8-*-```
+        - 위와 같이 사용 시, 소스코드 인코딩 지정하는 용도로 사용
+    - 세미콜론(;)
+        - 한 line에 복수의 구문 시 사용. 
+            - ```a=1; b=2```
