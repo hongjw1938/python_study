@@ -97,3 +97,136 @@
         - 깊은 복사
             - 객체를 공유하지 않는 복사 방식이다.
             - a = [1,2,3], b=a[:]라고 한다면 각각의 id값은 다르다. 이 때, a list내 element 값을 변경한다면 b는 변경되지 않는다.
+- <b>함수</b>
+    - 함수란?
+        - 여러 statement를 하나로 묶어서 실행할 수 있는 단위로 이미 정의되어 있는 것을 사용하거나 필요한 것을 정의
+        - 1회 이상 호출 가능하며 종료 시 결과 값을 호출한다.
+    - 선언
+        - def로 선언하며 콜론(;)으로 종료.
+        - 시작과 끝은 코드의 들여쓰기로 구분하며, 시작/끝은 명시하지 않아도 된다.
+        - Header 파일로 나누거나 interface, implementation으로 나누지 않는다.
+    - 예시
+        - <pre><code>def <함수명>(인수1, 인수2, ... , 인수 N):
+              &#32; <구문> # <-- 들여쓰기로 구분
+              &#32; return <반환 값>
+            </code></pre>
+        - <pre><code>def Times(a, b):
+            &#32; return a*b
+        </code></pre>
+    - 선언한 뒤 처리
+        - 함수를 선언하면 메모리에 함수 객체가 생성되어 해당 객체를 가리키는 reference가 생성된다.
+        - 해당 reference는 다른 변수에 할당 가능하다.
+        - 예를 들어 위 ```Times``` 함수를 <pre><code>myTimes = Times</code></pre> 와 같이 사용한다면 myTimes를 이용해 함수를 호출할 수 있다.
+            - <pre><code> r = myTimes(10, 10) </code></pre>
+    - 반환 및 인수
+        - return : 함수를 종료시키고 호출한 곳으로 돌아가게 한다.
+            - 여러 개의 값을 튜플로 묶어 값 전달 가능
+            - return을 사용하지 않거나 return 만 적어도 함수가 종료된다. 이 경우 리턴값은 None이다.
+        - 인수
+            - 레퍼런스를 이용해 전달되며 호출자 내부 객체의 레퍼런스이다.
+            - 기본 인수
+                - 함수 호출 시 인수 지정하지 않아도 기본 값이 할당 되게 지정
+                - <pre><code> def Times(a=30, b=20):
+                &#32; return a+b;</code></pre>
+            - 키워드 인수
+                - 인수 이름으로 값 전달. 변수 이름으로 특정 인수 전달이 가능하다.
+                - <pre><code>def connectURI(server, port):
+                &#32; str="http://" + server + ":" + port
+                &#32; return str</code></pre>
+            - 가변인수 리스트
+                - 인수의 개수가 정해지지 않은 가변 인수 전달 가능. *를 사용해 인수는 튜플 형식 전달 
+                - <pre><code> def Times(*ar):
+                    &#32; for item in ar:
+                    &#32; &#32; res.append(item)
+                    return res;</code></pre>
+            - 정의되지 않은 인수 처리
+                - **를 사용해 정의되지 않은 인수를 Dictionary형식으로 전달할 수 있다.
+                - <pre><code> def userURIBuilder(server, port, **user):
+                &#32; str = "http://" + server + ":" + port + "/?"
+                &#32; for key in user.keys():
+                &#32; &#32; str += key + "=" + user[key] + "&"
+                &#32; return str
+                - <pre><code> userURIBuilder("test.com", "8080", id='userid', passwd='1234')
+            - 호출자가 전달하는 변수의 타입에 따라 처리 방식이 다르다. 변수 타입은 다음과 같다
+                - Mutable(변경 가능한 변수)
+                - Immutable(변경 불가능한 변수)
+            - 변경 불가능한 변수
+                - 함수 1의 예시
+                    - <pre><code>def sum1(x,y):
+                        &#32; return x*y; </code></pre>
+                - 함수 2의 예시
+                    - <pre><code>def sum2(x,y):
+                        &#32; x=1
+                        &#32; return x + y; </code></pre>
+                - a, b를 10, 20으로 초기화 후, 각각의 함수를 해당 인수를 전달하여 호출한다고 가정하자.
+                - 이 때, sum1 함수는 x, y가 10,20 reference를 가리키게 되고, sum2에서는 x=1에 의해 x에 reference를 할당하게 된다.
+                - 그러나 함수 내부에서 x=1 이라고 지정한 것이 이전에 x=10으로 지정했을 때 영향을 미치지는 않는다.
+            - 변경 가능한 변수
+                - 만약 ``` wordlist = ['J', 'A', 'M'] ```으로 지정한 뒤에 해당 리스트를 인자로 전달한 경우 내부에서 리스트 내 element를 변경 시, 해당 리스트 내의 값은 실제로 변경된다.
+                - 그러나 내부에서 Deep Copy를 하여 새로이 reference를 할당해 변경한 경우, 외부에서 지정한 변수의 값에는 변경이 없다.
+    - Scoping rule
+        - 이름 공간(namespace)
+            - 변수의 이름이 저장되는 장소
+            - 함수 내부의 이름 공간, 지역 영역(Local Scope)
+            - 함수 밖의 영역, 전역 영역(Global Scope)
+            - 파이썬 자체에 정의에 의한 영역, 내장 영역(Built-in Scope)
+        - LGB 규칙
+            - 변수 이름을 찾을 때는 Local -> Global -> Built-in Scope 순서로 찾는다.
+            - 지역 영역에서 전역 영역의 이름을 접근 시, global을 사용한다.
+                - <pre><code>a = 10
+                def sum(x): &nbsp; &#32; return x+a;</code></pre>
+                - 위와 같이 지정 시 global에 있는 a를 찾게 된다.
+    - 람다 함수
+        - 이름이 없는 1줄 짜리 함수
+            - ``` lambda 인수 : <구문> ```
+        - 한 줄의 간단한 함수가 필요 시 사용하며, 프로그램의 가독성을 위해 사용하기도 한다.
+        - 예
+            - <pre><code> g = lambda x, y : x*y
+            g(2,3)
+            ---> 6
+            (lambda x: x * x)(3)
+            ---> 9</code></pre>
+    - 재귀 함수
+        - 함수 내부에서 자기 자신을 계속 호출하는 함수
+        - 전달 인자를 변경하면서 연속적인 반복 연산 시에 유용
+    - pass 구문
+        - 아무 일도 하지 않고 넘긴다. 아무 것도 안하는 함수, 모듈, 클래스를 만들 경우 유용하게 사용
+    - ```__doc__``` 속성과 help 함수
+        - help 함수는 설명을 볼 수 있다.
+            - ```help(print)```
+            - 사용자가 만든 함수도 help를 사용해 설명을 볼 수 있다.
+        - ```__doc__``` 속성을 이용해 더 자세한 설명을 추가할 수 있다.
+            - ``` plus.__doc__ = "return the a+b"```
+            - 위와 같이 plus 함수에 대한 설명을 더할 수 있다.
+    - iterator
+        - 순회 가능한 객체의 요소를 순서대로 접근할 수 있는 객체
+        - 내부 반복문을 관리해 주는 객체
+        - 내부의 ```__next__()```를 이용해 순회 가능한 객체의 요소를 하나씩 접근 가능하다.
+        - 예)
+            - <pre><code> s='abc'
+            it = iter(s)
+            it ---> <iterator object>
+            next(it) ---> 'a'
+            next(it) ---> 'b'
+            it.__next__() ---> 'c'</code></pre>
+    - generator
+        - return 대신 yield 라는 구문을 이용해 함수 객체를 유지한 채 값을 호출자에 넘겨준다.
+        - 값을 넘기고 함수 객체는 그대로 유지한다.
+        - 함수의 상태를 그대로 유지하고 다시 호출할 수 있어 순회 가능한 객체를 만들 경우 유용하다.
+        - 예)
+            - <pre><code> def reverse(data):
+            &#32; for index in range(len(data) - 1, -1, -1):
+            &#32; &#32; yield data[index]
+            for char in reverse('golf'):
+            &#32; print(char) ---> f l o g가 순서대로 출력</code></pre>
+        - 예2)
+            - <pre><code> def abc():
+            &#32; data ="abc"
+            &#32; for char in data:
+            &#32; &#32; yield char </code></pre>
+        - abc를 출력하면 함수 객체, abc()를 출력하면 generator객체가 출력된다.
+        - iterator를 이용해야 한다.
+            - <pre><code> it = iter(abc())
+            next(it) --> 'a'
+            next(it) --> 'b'
+            next(it) --> 'c'</code></pre>
