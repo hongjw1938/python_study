@@ -9,6 +9,8 @@
     - <a href="#control">제어문</a>
     - <a href="#class">클래스</a>
     - <a href="#module">모듈</a>
+    - <a href="#exception">예외처리</a>
+    - <a href="#inputoutput">입출력</a>
 
 - <b id="python">파이썬</b>
     - 1991년 귀도 반 로썸이 발표
@@ -458,3 +460,159 @@
             - 상위 패키지의 모듈을 import 하더라도 하위 모듈이 자동으로 다 import 되지는 않기 때문이다.(명시적으로 import해야 attribute를 사용할 수 있다.)
         - 각 디렉터리마다 ```__init__.py``가 꼭 존재 한다.
             - 패키지를 초기화하는 코드들이 포함된다.
+- <b id="exception">예외 처리</b>
+    - 예외란
+        - 프로그램의 제어 흐름을 조정하는 이벤트.
+        - 처리를 하지 않는 예외의 경우는 에러를 발생시켜 프로그램을 종료
+            - 이러한 unhandled Exception에는 '0'으로 나누거나, DB 접속 시 연결되지 않거나, 파일 열었는데 사용자에 의해 삭제된 경우 등이 있을 수 있다.
+        - 구문 에러
+            - 오타, 들여쓰기 등의 실수로 인해서 발생
+            - 이 경우는 Interpreter가 개발자에게 알려준다.
+        - 예외의 종류(일부)
+            - NameError - 선언하지 않은 변수를 참조
+            - ZeroDivisionError - '0'으로 나누는 경우
+            - IndexError : 배열의 인덱스를 벗어나는 참조 값을 참조 시
+            - TypeError : 지원하지 않는 연산 시(숫자를 문자로 나누기 등)
+        - 내장 예외
+            - exceptions 모듈에 사전 정의된 예외로 프로그램 동작 중 자동으로 발생하거나 개발자가 명시적으로 발생 시킬 수 있다.
+            - 내장 예외 모듈은 class 구조를 갖는다.
+                - Exception : 모든 내장 예외의 기본 클래스
+                - ArithmeticError : 수치 연산 예외의 기본 클래스
+                - LookupError : 시퀀스 관련 예외의 기본 클래스
+                - EnvironmentError : 파이썬 외부 에러의 기본 클래스
+    - 예외 처리
+        - try구문
+            - <pre><code>try:
+            &#32; <예외 발생 가능성이 있는 문장>
+            except <예외 종류>:
+            &#32; <예외 처리 문장>
+            except (예외 1, 예외 2):
+            &#32; <예외 처리 문장>
+            except 예외 as 인자:
+            &#32; <예외 처리 문장>
+            else:
+            &#32; <예외 미발생 시, 수행할 문장>
+            finally:
+            &#32; <예외 발생 유무에 무관하게 try 블록 이후 수행할 문장></code></pre>
+            - 예시
+                - <pre><code> def divide(a, b):
+                &#32; return a/b
+                try:
+                &#32; c = divide(5,2)
+                except ZeroDivisionError:
+                &#32; print("~~")
+                except TypeError as e: #전달되는 예외 인스턴스 객체를 e로 받아서 구문으로 활용할 수 있다.
+                &#32; print(e.args[0])
+                except:
+                &#32; print("~~")
+                else:
+                &#32; print("~~")
+                finally:
+                &#32; print("~~")</code></pre>
+    - 사용자 정의 예외
+        - 사용자 정의 예외는 Exception class를 상속받아 구현해야 한다.
+        - 내장 예외만으로 부족한 경우 개발자가 직접 예외를 정의해 사용할 수 있다.
+        - raise 구문
+            - 활용
+                - ```raise [Exception]``` # 특정 예외를 발생
+                - ```raise [Exception(data)]``` # 예외 발생 시, 관련 데이터 전달
+                - ```raise``` # 발생된 예외를 상위로 전달
+        - assert 구문
+            - 개발 과정에서 디버깅, 제약 설정 등에 발생시킴
+            - 인자로 받은 조건식이 거짓이면 AssertionError 발생
+            - ```Assert <조건식>, <관련 데이터>```
+            - ```__debug__```가 True인 경우만 assert 구문 활성화
+                - 명령 prompt에서 최적화 옵션(-O)를 설정 시, ```__debug__```는 False로 설정된다.
+            - 예
+                - <pre><code> def foo(x): #받은 인자의 type이 정수형인지 검사하는 함수
+                &#32; assert type(x) == int, "Input value must be integer"
+                &#32; return x * 10
+                ret = foo("a") # AssertionError가 발생한다.
+                print(ret)</code></pre>
+- <b id="inputoutput">입출력</b>
+    - 출력
+        - print()함수
+            - 2.x는 함수가 아니었으나 3.x에서 함수로 변경
+            - 입력인자로는 구분자(sep), 끝라인(end), 출력(file)을 지정할 수 있다.
+            - 예) ```print("welcome to", "python", sep="~", end="!", file=sys.stderr)```
+                - file이라는 출력 인자를 지정하여 표준오류 또는 파일로도 변경할 수 있다.
+        - formatting
+            - format() 함수를 통해 문자열을 더 자유로이 다룰 수 있다.
+            - 문자열 내 값이 들어가길 원하면 {}로 표시하며, {}안의 값은 숫자로 표현하여 format 인자의 인덱스를 나타낸다.
+            - 예) ```print("{0} is {1}".format("apple","red"))``` -> 출력은 apple is red로 된다.
+            - 키/사전을 이용한 포매팅
+                - 키 : ```print("{item} is {color}".format(item="apple", color="red"))```
+                - 사전의 경우 : ```dic = {"item":"apple", "color":"red"} // print("{0[item]} is {0[color]}".format(dic))```
+            - ** 기호의 경우 dictionary를 입력으로 받은 것으로 판단하고 인자를 하나만 받아 불필요한 index를 생략가능
+                - 예) ```print("{item} is {color}".format(**dic))```
+            - !기호를 통해 문자열 변환도 가능하다.
+                - 예) ```print("{item!s} is {color!s}".format(**dic))``` --> apple is red
+                - 예) ```print("{item!r} is {color!r}".format(**dic))``` --> 'apple' is 'red'
+                - 예) ```print("{item!a} is {color!a}".format(**dic))``` --> 'apple' is 'red'
+                - !s, !r, !a는 각각 str(), repr(), ascii()의 실행결과와 동일하다.
+            - : 기호로 정렬, 폭, 부호, 공백처리, 소수점, 타입을 지정할 수 있다.
+                - 예) ```print("{0:$>5}".format(10))``` --> $$$10 #이 경우 $를 쓰지 않으면 공백으로 처리된다. 5자리만큼 사용하여 우측 정렬을 하는 것이다.
+                - > 는 우측 기준, <는 좌측 기준, ^는 중앙 기준, = 는 부호화와 상관이 있다.
+                - "="를 쓰면 부호가 나타난다.
+                    - 예) ```print("{0:$>-5}".format(-10))``` --> $$-10
+                    - +, -는 각각의 기호, " " 와 같이 공백은 마이너스 시에는 마이너스 부호, 플러스 시에는 공백을 표시하라는 의미이다.
+            - 진수 표현법
+                - "b"는 이진수, "d"는 십진수, "x"는 16, "o"는 8진수이며 "c"는 문자열을 출력하라는 의미다.
+                - "#"은 #x는 16, #o는 8, "#b"는 2진수 -> 앞에 진수 표현이 들어간다. 16은 0x, 8은 0o, 2는 0b와 같이 출력
+                - 예) ```print("{0:b}".format(10))``` --> 1010
+            - 실수 표현 법
+                - "e"는 지수표현, "f"는 일반 실수, "%"는 퍼센트 표현이다.
+                - 실수 표현 시, 소수 몇 번째 까지 표현할지 지정할 수 있다.
+                - 예) ```print("{0:.3f}".format(4/3))``` --> 1.333
+    - 입력
+        - input()함수
+            - 예) ```a=input('isert any keys:')``` --> 이와 같이 화면에 prompt를 주어 사용자가 키를 입력할 시기를 확인할 수 있게 한다.
+    - 파일 입출력
+        - open()
+            - 파일을 열고 전용 함수로 작업하는 것이 일반적
+            - 형식 : ```파일객체 = open(file, mode)```
+            - mode는 속성
+                - r: 읽기 모드(디폴트)
+                - w: 쓰기 모드
+                - a: 쓰기 + 이어쓰기 모드
+                - + : 읽기 + 쓰기 모드
+                - b: 바이너리 모드
+                - t: 텍스트 모드(디폴트)
+        - 오픈 후 입출력 - read(), write(), close()
+            - read() : 데이터를 읽음
+            - write() : 함수, 문자열을 씀
+            - close() : 파일을 닫음, closed를 통해 파일의 닫힘 여부 bool 값도 판단 가능하다.
+            - ```f = open('text.txt', 'w'); f.write('plow deep\nwhile sluggards sleep'); f.close()```
+            - 텍스트 모드는 일반 문자열처럼 encoding이 적용되어 binary data를 다룰 때는 오류가 발생하여 binary data 다룰 경우에는 binary mode를 써야 한다.
+        - 이외 - readline(), readlines(), tell(), seek()
+            - readline() : 호출 시 한 줄씩 읽은 문자열 반환
+            - readlines() : 파일의 모든 내용을 줄 단위로 잘라서 리스트 반환
+            - tell() : 현재 파일에서 어디까지 읽고 썼는지 위치 반환
+            - seek() : 사용자가 원하는 위치로 포인터 이동
+        - with~as 구문
+            - 코드 구문의 내용이 다 끝나면 자동으로 파일이 닫히게 된다.
+            - <pre><code>
+            with open('test.txt') as f:
+            &#32; print(f.readlines())
+            &#32; print(f.closed)
+            출력 : ['plow deep\n', 'while sluggards sleep']
+            False
+            f.closed
+            True</code></pre>
+        - pickle
+            - 문자열은 배운 내용대로 가능하나, 리스트/클래스를 저장 시에 더 쉽게 하려면 pickle 모듈을 사용해야 한다.
+            - pickle 모듈로 파일에 쓰거나 읽을 때는 반드시 binary 모드로 파일을 열어야 한다.
+            - 쓰기 : dump
+                - <pre><code>colors = ['red', 'green', 'black']
+                import pickle
+                f = open('colors', 'wb')
+                pickle.dump(colors, f)
+                f.closed</code></pre>
+            - 읽기 : load
+                - <pre><code>del colors 
+                f = open('colors', 'rb')
+                colors = pickle.load(f)
+                f.close()
+                colors # ['red', 'green', 'black']</code></pre>
+            - 사용자 정의 클래스
+                - 
