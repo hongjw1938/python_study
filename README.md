@@ -11,6 +11,7 @@
     - <a href="#module">모듈</a>
     - <a href="#exception">예외처리</a>
     - <a href="#inputoutput">입출력</a>
+    - <a href="#string">문자열 다루기</a>
 
 - <b id="python">파이썬</b>
     - 1991년 귀도 반 로썸이 발표
@@ -615,4 +616,98 @@
                 f.close()
                 colors # ['red', 'green', 'black']</code></pre>
             - 사용자 정의 클래스
-                - 
+                - 파이썬 객체는 전부 pickle로 저장이 가능하며, 사용자 정의 클래스 객체도 가능하다.
+                - <pre><code>class test:
+                &#32; var = None
+                a = test()
+                a.var = 'Test'
+                f = open('test', 'wb')
+                pickle.dump(a, f)
+                f.close()
+                f = open('test', 'rb')
+                b = pickle.load(f)
+                f.close()
+                b.var # 'Test'</code></pre>
+- <b id="string">문자열 다루기</b>
+    - 문자열 클래스
+        - str : 내장된 기본 클래스로 문자열을 다루는 클래스
+            - capitalize() : 첫 문자만 대문자, 나머지는 소문자 유지
+            - count(keyword, [start, [end]]) : start, end를 통해 slicing을 하여 특정 word가 얼마나 나왔는지 확인할 수 있다.
+            - encode([encoding, [errors]]) : 기본 유니코드 이나 이를 사용해 특정 문자열 스타일로 변환 가능, cp949 또는 utf-8등으로 가능하다.
+                - errors에 strict(기본)을 지정하면 지정 불가한 인코딩을 지정 시 예외가 발생한다.
+                - ignore를 사용하면 error를 무시하며 replace로 지정 시, ???로 지정된다. 
+                - xmlcharrefreplcace 또는 backslashreplace를 통해 다른 것으로 지정할 수도 있다.
+            - endswith(postfix, [start, [end]]) : bool값을 반환하며, 특정 postfix로 문자열이 끝나면 true를 반환한다. 슬라이싱을 통해 체크할 부분을 지정할 수 있다.
+            - expandtabs([tabsize]) : \t라는 tab을 공백으로 치환시킨다. 숫자를 인자로 넣으면 1개의 공백으로 치환
+            - find(keyword, [start, [end]]) : 특정 키워드가 슬라이싱된 곳에 있는 위치를 나타낸다. 못 찾으면 -1 반환
+            - index(keyword, [start, [end]]) : find와 동일하나 못 찾으면 예외를 발생시킨다.
+            - isalnum() : 알파벳, 숫자로 표현된 경우만 True 반환
+            - isalpha() : 알파벳인 경우만 True
+            - islower() : 모든 알파벳이 소문자인 경우만 True, 숫자 등은 신경 쓰지 않음
+            - isspace() : 모두 공백이면 True(탭, 개행, 스페이스)
+            - istitle() : 각 단어가 대문자에 이어 소문자로 나오면 True
+            - isupper() : 모두 대문자면 True, 숫자 등은 신경 쓰지 않음
+            - isdecimal(), isdigit() : 10진수면 True
+            - isnumeric() : 숫자에 관련되면 다 True
+            - join(sequence) : ```".".join("HOT") --> 'H.O.T'```
+            - lower() : 모든 영문자를 소문자로 반환
+            - lstrip([chars]) : 인자로 지정한 문자열을 왼쪽에 있으면 다 지움
+            - rstrip([chars]) : 인자로 지정한 문자열을 오른쪽에서 다 지움
+            - maketrans(x, [y, [z]]) : 입력 인자가 하나라면 ```transmap = str.maketrans({"p":"P"})``` map 형태로 반환하여 그것을 통해 특정 문자열을 translate할 수 있다.
+                - 예 : ```"python is powerful".translate(transmap)```
+                - 입력 인자가 둘이면 각 문자열의 길이는 동일하게 인자로 줘야 하며 각각의 index를 1번째 인자를 2번째 인자로 변환한다.
+                - 세 개면 3번째 인자로 지정된 문자는 다 지운다.
+            - partition(separator) : 문자열을 separator로 나눈다.
+            - replace(old, new, [count]): old를 new로 반환시키며 count를 지정하면 그 숫자만큼만 변환한다.
+            - rfind(keyword, [start, [end]]) : 우측에서 key를 찾고 없으면 -1을 반환
+            - rindex(keyword, [start, end]]) : 우측에서 index를 찾는데 없으면 에러 반환
+            - rpartition(separator) : separator를 우측에서부터 찾아 그 기준으로 값을 나눈다.
+            - rsplit([separator, [maxsplit]) : separator가 없으면 공백 기준으로 나눈다, maxsplit을 지정하면 그 횟수만큼 split한다
+            - rstrip([chars]) : 우측에서 부터 지정한 문자열을 다 제거한다.
+            - split([separator, [maxsplit]) : 좌측에서 부터 separator로 나누며, maxsplit 지정 시 그 횟수만큼 split한다.
+            - splitlines([keep]) : True로 인자를 넣으면 \n 등 new line이 포함된 결과로 나누어 확인할 수 있다.
+            - startswith(prefix, [start, [end]]) : prefix로 지정한 단어가 있으면 True
+            - strip([chars]) : 양쪽에서 지정한 모든 문자열 제거
+            - swapcase() : 소문자는 대문자, 대문자는 소문자로
+            - title() : 모든 단어를 첫 문자는 대문자, 나머지는 소문자로
+            - upper() : 모든 영 소문자를 대문자로
+    - 정규표현식
+        - 특정한 규칙을 가진 문자열을 표현하며, 주어진 패턴으로 문자열을 검색/치환시에 사용하며 vi,grep 등 프로그램에서 사용된다.
+        - ![Alt Text](./image/regex.png)
+        - 예
+            - app.e : app, e 사이의 모든 1개의 문자가 포함되는 모든 문자. - apple, appLe 등
+            - ^app : app으로 시작하는 모든 것
+            - ple$ : ple 로 끝나는 모든 문자
+            - appl[a-z] : appl 뒤에 a~z까지 모든 small 문자 한개만 매칭
+            - appl[^a-z] : 소문자가 오는 경우를 제외한 모든 경우
+            - apple|E : apple, applE 만
+        - escape 문자열
+            - ![Alt Text](./image/escape.png)
+        - 정규표현식 모듈
+            - search(pattern, string[, flags]) : string 전체에 대해 pattern이 존재하는지 검사 후 MatchObject 인스턴스 반환
+            - match(pattern, string[, flags]) : string 시작에서 pattern이 존재하는지 검사 후 MatchObject 인스턴스 반환
+            - split(pattern, string[, maxsplit=0]) : pattern을 구분자로 string을 분리하여 리스트로 반환
+            - findall(pattern, string[, flags]) : string에서 pattern과 매치되는 모든 경우를 찾아 리스트로 반환
+            - sub(pattern, repl, string[, count]) : string에서 pattern과 일치한 부분에 대해 repl로 교체해 결과 문자열 반환
+        - 모듈 예제
+            - <pre><code> >>> import re
+            >>> re.match('[0-9]*th', '35th') # 결과로 Match 객체 반환
+            <_sre.SRE_Match object at 0x02F023A0>
+            >>> bool(re.match('[0-9]*th', ' 35th')) # 불린으로 검색 결과 확인, 공백이 있어서 False
+            False
+            >>> bool(re.search('[0-9]*th', ' 35th'))
+            True
+            >>> bool(re.match('ap', 'This is an apple')) # 문자열 시작부터 검색
+            False
+            >>> bool(re.search('ap', 'This is an apple')) # 문자열 전체에서 검색
+            True </code></pre>
+            - <pre><code>
+            >>> re.findall(r"app\w*". "application orange apple banana") # 매치되는 문자열이 있는 경우
+            ['application', 'apple']
+            >>> re.findall(r"king\w*", "application orange apple banana") # 매치되는 문자 []
+            []</code</pre>
+            - <pre><code>
+            >>> re.sub("-", "", "901225-1234567") #주민등록번호 형식 변경
+            '9012251234567'
+            >>> re.sub(r"[:,|\s]", ", ", "Apple:Orange Banana|Tomato") # 필드 구분자를 통일
+            'Apple, Orange, Banana, Tomato'
