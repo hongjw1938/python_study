@@ -12,6 +12,12 @@
     - <a href="#exception">예외처리</a>
     - <a href="#inputoutput">입출력</a>
     - <a href="#string">문자열 다루기</a>
+    - <a href="#date">날짜 다루기</a>
+    - <a href="#math">숫자 다루기</a>
+    - <a href="#filesystem">파일 시스템</a>
+    - <a href="#database">데이터베이스</a>
+    - <a href="#os">운영체제 관련 기능</a>
+    - <a href="#final">총 정리</a>
 
 - <b id="python">파이썬</b>
     - 1991년 귀도 반 로썸이 발표
@@ -711,3 +717,210 @@
             '9012251234567'
             >>> re.sub(r"[:,|\s]", ", ", "Apple:Orange Banana|Tomato") # 필드 구분자를 통일
             'Apple, Orange, Banana, Tomato'
+- <b id="date">날짜 다루기</b>
+    - 컴퓨터의 시간 표현
+        - Time stamp
+        - UTC(협정세계시)
+            - 세슘 원자 기준
+        - 그리니치 평균시
+            - 그리니치 천문대 기준 좌우 시간, UTC와 거의 동일
+        - LST(지방표준비, Local Standard Time)
+            - 한국은 UTC+9
+        - 일광절약 시간제(Daylight Saving Time)
+            - 서머타임시에 사용
+    - 시간 모듈
+        - struct_time 시퀀스 객체(읽기 전용)
+            - tm_year : 년도
+            - tm_mon : 월(yyyy)
+            - tm_mday : 일(1~12)
+            - tm_hour : 시(0~23)
+            - tm_min : 분(0~59)
+            - tm_sec : 초(0~61, 윤초 때문에 61도 있음)
+            - tm_wday : 요일(월요일부터 0)
+            - tm_yday : 누적 날짜(1월1일부터의 누적일)
+        - time 모듈의 함수
+            - time.time() : 1970년 1월 1일 자정 이후 누적 초 float 단위
+            - time.sleep(secs) : 현재 동작 중인 프로세스를 주어진 초만큼 정지
+            - time.gmtime([secs]) : 입력된 초를 변환해, UTC 기준의 struct_time 시퀀스 객체로 반환
+            - time.localtime([secs]) : 입력된 초를 변환해, 지방표준시 기준의 struct_time 시퀀스 객체 반환
+            - time.asctime([t]) : struct_time 시퀀스 객체 인자로 받아 'Sun Mar 15 18:49:28 2009'와 같이 변환
+            - time.mktime(t) : 지방 표준시인 struct_time 시퀀스 객체를 인자로 받아 time()과 같은 누적된 초 반환
+        - strptime, strftime
+            - 사용자가 직접 포맷 지정해 출력
+            - 원형
+                - time.strftime(format[, t]) : struct_time객체를 사용자 정의한 형태로 변환
+                - time.strptime(string[, format]) : 사용자가 정의한 형식을 struct_time객체로 변환
+            - 지시자
+                - ![Alt Text](./image/format_inst.png)
+    - 날짜, 시간 모듈
+        - datetime 모듈 : 기념일과 같은 날짜, 시간 연산을 위해 사용
+            - 예) : 오늘 부터 1000일 후, 기념일 계산 등
+            - 주요 클래스
+                - datetime.date : 일반적인 그레고리안 달력의 연,월,일
+                - datetime.time : 시간을 시, 분, 초, 마이크로 초, 시간대 로 표현
+                - datetime.datetime : date클래스와 time 클래스의 조합
+                - datetime.timedelta : 두 날짜 혹은 시간 사이의 기간
+            - 생성자
+                - datetime.date(year, month, day)
+                    - year는 1~9999, month는 1~12, day는 1~ 해당 월의 날짜 안으로만 넣지 않으면 예외 발생
+        - time 클래스
+            - 생성자
+                - datetime.time(hour[, minute[, second[, microsecond[, tzinfo]]]])
+                - 시, 분, 초, 마이크로초, 시간대 정보를 입력 받아 time 객체 생성
+        - timedelta 클래스
+            - 두 날짜 , 시간 사이의 기간
+            - 생성자
+                - timedelta([days[, seconds[, microseconds[, milliseconds[, minutes[, hours[, weeks]]]]]]])
+                - delta 객체를 만들어 상호 연산 또한 가능하다.(*, // 등도 가능)
+                - boolean 연산 또한 객체 끼리 가능하다. 어느 쪽이 더 크고 작고를 비교할 수 있다.
+                - 다른 시간 객체와 timedelta 객체 간의 연산도 가능하다.
+                    - 예를 들어 현재 시간 today() 함수로 객체를 만들고 timedelta 객체를 만들어 연산하여 다른 날짜를 연산할 수 있다.
+- <b id="math">숫자 다루기</b>
+    - 내장 함수
+        - 모듈 import 없이 사용 가능
+        - sum(iterable[, start]): 순회 가능한 객체의 총 합계
+        - max(iterable): 순회 가능한 객체의 최대값
+        - min(iterable): 순회 가능한 객체의 최소값
+        - abs(x) : x의 절대 값
+        - pow(x, y[, z]) : x의 y제곱
+        - round(x[, n]) : x의 반올림 결과
+        - divmod(a, b): a/b의 몫, 나머지 튜플로 반환
+        - 순회 가능한 객체의 경우 list tuple등이 있으며 해당 객체를 넣으면 알아서 연산을 진행함, start등을 지정해 slicing도 가능
+    - math 모듈
+        - 함수
+            - math.ceil(x) : N >= x 만족하는 가장 작은  정수 N 반환
+            - math.floor(x) : N <= x 만족하는 가장 큰 정수 N 반환
+            - math.trunc(x) : x의 정수 부분만 반환
+            - math.copysign(x, y) : y의 부호만 x에 복사해 반환
+            - math.fabs(x) : x의 절대값 반환
+            - math.factorial(x) : x의 계승 값 반환, x!
+            - math.fmod(x, y) : 나머지 연산 수행
+            - math.fsum(iterable) : 입력받은 값의 합계 반환
+            - math.modf(x) : 입력받은 x의 순수 소수부분, 정수 부분 분리해 튜플 반환
+        - 지수 로그 연산
+            - math.pow(x, y) : x의 y 제곱
+            - math.sqrt(x) : x의 제곱근
+            - math.exp(x) : e^x 값
+            - math.log(x[, base]) : 밑은 base인 log x
+        - 삼각 함수
+            - math.degrees(x) : 라디안 표현한 각도를 60분법 변환
+            - math.radians(x) : 60분법 표현 각도를 라디안으로 변환
+            - 이외 sin, asin, cosh, asin, cos, atan, sinh 등의 함수도 있다.
+    - 분수 모듈(fractions)
+        - Fraction 클래스
+            - 유리수와 관련된 연산을 효율적으로 처리하는 분수 모듈
+            - 생성자
+                - fractions.Fraction(분자=0, 분모=1)
+                - fractions.Fraction(Fraction 객체)
+                - fractions.Fraction(문자열)
+            - 지원 메서드
+                - 기본 연산 및 floor, ceil, round가 가능하다. 최대 공약수 반환하는 method 또한 있다.
+                - ```f = Frantion.from_float(3.14); f.__floor__()```
+    - 십진법 모듈(decimal)
+        - 부동 소수점의 표현 방식
+            - 소수점의 위치를 고정하지 않고 그 위치를 나타내는 수를 따로 적는 방식으로 유효숫자를 나타내는 가수, 소수점 위치 풀이하는 지수로 나눈다.
+            - '[가수]*[밑수][지수]'와 같이 나타낸다.
+            - 컴퓨터 시스템은 밑수를 2, 부호 나타내는 MSB를 추가해 세 부분으로 나눈다.
+            - 1: 부호, 8 비트 : 지수부, 23비트 : 가수부
+            - 이에 따라 정확한 실수를 나타내지 못하는 문제가 발생할 수 있다. 또한 연산에 문자가 발생할 수 있다.
+            - 이를 해결하기 위해 사용되는 것이 십진법 모듈이다.
+        - 생성자
+            - decimal.Decimal([value[, context]])
+            - value에는 Infinity, Inf, NaN, -0 등의 값도 넣을 수 있다.
+        - 연산
+            - 모든 수치 연산 및 인자로 전달이 가능하다.
+            - max, min, sum 등의 내장 함수 인자로 전달이 가능하다.
+    - 랜덤 모듈(random)
+        - method
+            - random.seed([x]) : 임의 숫자 생성기의 초기화 작업, x를 주지 않거나 NaN이 들어가면 현재 시스템 시간 기반
+            - random.random() : '0.0 <= ㄹ < 1.0' 사이의 임의의 float 숫자 반환
+            - random.uniform(a, b) : 인자로 받은 두 값 사이의 임의의 float 숫자 반환
+            - random.gauss(m, sb) : 가우스 분포의 난수 반환
+            - random.randrange([start], stop[, step]) : 내장 함수인 range()의 아이템 중에서 임의로 선택해 반환(중복 허용)
+                - 예) ```[random.randrange(20) for i in range(10)] # [1, 5, 6, 19, 12, 4, 5, 3, 10, 1]```
+                - 예) ```[random.sample(range(20), 10] #[19, 1, 16, 17, 9, 3, 2, 6, 5, 15]``` -> 중복 비 허용을 원한다면 이와 같이 사용
+            - random.randint(a, b) : 'a <= N <= b' 인 임의의 정수 N 반환
+            - random.choice(seq) : 입력받은 시퀀스 객체의 임의의 아이템 반환
+                - 예) ```l = list(range(10)); [random.choice(l) for i in range(3)] # [9, 2, 2]``` -> 중복 값이 생김
+                - 예) ```random.sample(l, 3) #[5, 8, 7]```-> 중복 값 허용 하지 않고 싶은 경우
+            - random.shuffle(x[, random]) : 입력받은 시퀀스 객체 섞음
+- <b id="filesystem">파일 시스템</b>
+    - os.path
+        - 파일 경로 생성 및 수정, 파일 정보를 가져올 수 있다.
+        - import
+            - ```from os.path import *```
+        - method
+            - os.path.abspath(path) : 절대 경로 반환
+            - os.path.basename(path) : 입력받은 경로의 기본 이름 반환(abspath와 반대임)
+            - os.path.dirname(path) : 입력받은 파일/디렉터리의 경로를 반환한다.
+            - os.path.exists(path) : 입력받은 경로가 있으면 True, 없으면 False
+            - os.path.expanduser(path) : 입력받은 경로안의 ~를 현재 사용자 디렉터리의 절대 경로로 대체한다.
+            - os.path.expandvars(path) : path안에 환경 변수가 있으면 확장, 즉, 환경변수를 지정한 값으로 확장하는 것
+            - os.path.getatime(path) : 입력받은 경로에 대한 최근 접근 시간을 반환한다. 파일 또는 권한 없으면 os error 발생
+                - 이 함수의 결과를 알아볼 수 있게 하고자 하는 경우 time 모듈을 import 하여 gmtime을 이용하여 변환
+            - os.path.getmtime(path) : 입력 받은 경로에 대한 최근 변경 시간 반환, 파일 없거나 권한 없으면 os error
+            - os.path.getctime(path) : 입력 받은 경로에 대한 생성 시간 반환. 파일 없거나 권한 없으면 os error
+            - os.path.getsize(path) : 입력받은 경로에 대한 바이트 단위의 파일 크기 반환, 파일 없거나 권한 없면 os error
+            - os.path.isabs(path) : 절대 경로면 True, 아니면 False인데 실제 파일 존재 여부는 무시
+            - os.path.isfile(path) : 파일이면 True, 아니면 False, 즉 경로가 파일인지 검사
+            - os.path.isdir(path) : 경로가 디렉터리인지 아닌지 검사, 디렉터리면 True
+            - os.path.join(path1[, path2[, ...]]) : 해당 os 형식에 맞게 입력받은 경로 연결
+                - 만약 1번 인자, 2번 인자가 둘 다 절대 경로, 3번 인자가 상대경로면 2,3번만 합친다.
+            - os.path.normcase(path) : 해당 os에 맞게 입력받은 경로의 문자열 정규화
+            - os.path.normpath(path) : 입력받은 경로 정규화
+            - os.path.split(path) : 입력 받은 경로를 디렉터리, 파일 부분으로 나누는데, 실제 파일 존재여부는 확인 하지 않는다.
+            - os.path.splitdrive(path) : 입력 받은 경로를 드라이브 부분과 나머지로 나누는데, 실제 파일 존재 여부는 비확인
+            - os.path.splitext(path) : 입력 받은 경로를 확장자와 그 외로 나누며, 실제 파일 존재 여부는 비확인
+    - glob 모듈
+        - windows의 dir 명령이나 linux의 ls명령과 유사한 기능을 제공
+        - 함수
+            - glob.glob(path) : path 경로에 대응하는 모든 파일, 디렉터리의 리스트 반환, 경로 방식에 따라 절대 경로로 결과 나타나게 할 수 있다.
+                - path 인자는 정규표현식을 통해 입력할 수 있다.
+            - glob.iglob(path) : glob과 동일하게 동작 수행하나 리스트가 아닌 iterator를 반환
+    - tree 만들기
+        - tree는 하위 디렉터리 구조를 보여주는 tool이다. cmd창에서 tree 명령으로 수행 가능하다.
+        - 기본 예제 소스 코드
+            - ![Alt Text](./image/tree_code.png)
+- <b id="database">데이터베이스</b>
+    - 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
