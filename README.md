@@ -882,45 +882,115 @@
         - 기본 예제 소스 코드
             - ![Alt Text](./image/tree_code.png)
 - <b id="database">데이터베이스</b>
-    - 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    - SQLite3
+        - 개요
+            - 디스크 기반 가벼운 DB 라이브러리로 서버가 별도로 불필요해 자원을 적게 사용
+            - 모바일 디바이스에 기본적으로 사용되며 파이썬에 기본 포함된다.
+            - 별도의 모듈 설치 없이 pysqlite 모듈을 사용하면 된다.
+        - 모듈 함수
+            - connect 함수 : DB에 연결하고 연결된 객체 반환
+            - complete_statement(sql) : SQL 문장에 대해 True 반환
+            - register_adapter(type, callable) : 사용자 정의 파이썬 자료형을 SQLite3에서 사용토록 등록, callable을 통해 변환 시 사용할 함수 지정
+            - register_converter(typename, callable) : SQLite3에 저장된 자료를 사용자 정의 자료형으로 변환, typename을 통해 자료형 지정
+        - Connection class
+            - cursor() : Cursor 객체 생성
+            - commite() : 현재 트랜잭션 변경 내역 DB에 반영
+            - rollback() : 가장 최근의 commit() 이후 지금까지 작업한 내용에 대해 되돌림
+            - close() : DB 연결 종료
+            - isolation_level : 트랜잭션의 격리 수준 확인/설정
+                - none으로 지정 시 auto commit 모드가 된다.
+            - execute, executemany, executescript 계열 메소드 : 임시 Cursor 객체 생성해 해당 execute 계열 메서드 수행
+            - create_aggregate메서드 : 사용자 정의 집계 함수 생성
+            - create_collation 메서드 : 문자열 정렬 시 SQL 구문에서 사용될 이름 및 정렬 함수 지정
+                - 첫 문자열이 더 작으면 -1, 같으면 0, 더 크면 1
+            - iterdump() : 연결된 DB의 내용을 SQL 질의 형태로 출력
+        - Cursor class
+            - execute 메서드 : SQL 문장 실행
+            - executemany 메서드 : 동일한 SQL 문장을 parameter만 변경해 수행
+            - executescript 메서드 : 세미콜론으로 구분된 연속된 SQL 문장 수행
+            - fetchone() : 조회된 결과에서 데이터 1개 반환하고 없으면 None
+            - fetchmany 메서드 : 조회된 결과에서 입력받은 size 만큼의 데이터를 리스트 형태 반환
+            - fetchall() : 조회된 결과 모두를 리스트 형태로 반환, 없으면 빈 리스트 반환
+    - SQLite3 사용법
+        - import : ```import sqlite3```
+        - Connection 객체 생성
+            - ```con = sqlite3.connect("test.db")``` -> 실제 파일 이용한 Connection 객체 생성, 이미 생성된 db에 대해서도 조회, 연산이 가능
+            - ```con = sqlite3.connect(":memory:")``` -> 메모리를 이용한 객체 생성으로, 끊어지면 작업한 내용 모두 사라짐. 연산속도는 더 빠름
+        - execute 메서드를 통한 SQL 문 수행 및 쿼리
+            - <pre><code>
+            import sqlite3
+            con = sqlite3.connect(":memory:")
+            cur = con.cursor()
+            cur.execute("CREATE TABLE PhoneBook(Name text, PhoneNum text);")
+            cur.execute("INSERT INTO PhoneBook VALUES('Someone', '010-1234-5678')
+            name = "Someone"
+            phoneNumber = '010-5678-1234'
+            cur.execute("INSERT INTO PhoneBook VALUES(?,?);", (name, phoneNumber))
+            </code></pre>
+            - 사전을 이용한 인자 전달
+                - ```cur.execute("INSERT INTO PhoneBook VALUES(:inputName, :inputNum);", {"inputNum":phoneNumber, "inputName":name})```
+            - 시퀀스 객체를 이용한 인자 전달
+                - ```datelist = (('Tom', '010-543-5432'), ('DSP', '010-123-1234'))```
+                - ```cur.executemany("INSERT INTO PhoneBook VALUES(?, ?);", datalist)```
+        - fetch를 통한 record 조회
+            - <pre><code>
+            cur.execute("SELECT * FROM PhoneBook;")
+            for row in cur:
+                &#32; print(row)
+            </code></pre>
+            - fetchone, fetchmany를 통해 조회시
+                - fetchone은 하나를 조회하며, fetchmany를 바로 그 뒤에서 사용하면 나머지 조회되지 않은 결과 중 지정한 수만큼 모두 반환한다.
+                - 만약 fetchmany에 인자로 지정한 숫자가 실제 저장된 데이터 크기보다 크면 전체를 다 반환
+            - fetchall
+                - 기존 조회된 결과의 다음부터 모든 결과를 다 반환함
+                - 즉 fetchone 이후에 fetchall하면 one에서 반환된 것 이후 내용을 전부 반환
+        - 트랜잭션 처리
+            - DCL 명령어를 통해 SELECT 수행하고 결과를 모두 fetch 시에는 기존에 commit을 수행하지 않았다면 수행한 SQL 구문이 반영되지 않을 수 있다.
+        - 정렬 : Order by
+            - SELECT 구문에 Order BY를 지정하여 반환되는 결과를 정렬할 수 있다.
+            - DESC를 지정하면 내림차순으로 지정된다.
+            - 사용자 임의의 정렬 방식을 지정 시에는 미리 정렬 함수를 지정하고 SELECT 문에서 해당 정렬 방식을 명시적으로 지정해야 한다.
+                - <pre><code>
+                def OrderFunc(str1, str2): # 대소문자 구별 없이 정렬
+                &#32; s1=str1.upper()
+                &#32; s2=str2.upper()
+                &#32; retrun (s1 > s2) - (s1 < s2)
+                con.create_collation('myordering', OrderFunc) # SQL 구문에서 호출할 이름, 함수 등록
+                cur.execute("SELECT Name FROM PhoneBook ORDER BY NAME COLLATE myordering")
+                </code></pre>
+        - 내장, 집계 함수
+            - abs(x) : 절대값 반환
+            - length(x) : 문자열 길이 반환
+            - lower(x) : 소문자로 변환 후 반환
+            - upper(x) : 대문자로 변환 후 반환
+            - min(...) : 최소값 반환
+            - max(...) : 최대값 반환
+            - random(*) : 임의의 정수 반환
+            - count(x) : NULL이 아닌 튜플 개수 반환
+            - count(*) : 튜플의 개수 반환
+            - sum(x) : 합 반환
+        - 자료형
+            - SQLite3의 자료형과 Python 자료형 상호 대응
+                - NULL - None
+                - INTEGER - int
+                - REAL - float
+                - TEXT - str, float
+                - BLOB - buffer
+        - DB 덤프 만들기
+            - 현재 상태를 SQL구문으로 추출하고 싶은 경우 Dump를 이용하면 된다.
+            - iterdump()를 통해 print하면 됨
+            - <pre><code>
+            import sqlite3
+            con = sqlite3.connect(":memory:")
+            cur = con.cursor()
+            cur.execute("CREATE TABLE PhoneBook(Name text, PhoneNum text);")
+            cur.execute("INSERT INTO PhoneBook VALUES('Derick', '010-1234-5678');")
+            list = (('Tom', '010-543-5432'), ('DSP', '010-123-1234'))
+            cur.executemany("INSERT INTO PhoneBook VALUES(?,?);", list)
+            for l in con.iterdump():
+            &#32; print(l)
+            </code></pre>
+            - 위 덤프 예제의 실행 결과는 다음과 같다
+                - ![Alt Text](./image/dump_result.png)
+        - 예시
+            - ![Alt Text](./image/example_sqlite3.png)
